@@ -11,43 +11,18 @@ sns.set_theme(style="whitegrid")  # Set the seaborn theme
 plt.rcParams['font.family'] = 'sans-serif'  # Use a cleaner font
 
 # Data for the 4 bar charts
-Designation = [
-    'Sales Development Manager',
-    'Business Development Manager',
-    'Assistant Sales manager',
-    'Sales Manager',
-    'Sr. Sales manager',
-    'Executive sales manager',
-    'Senior executive sales manager',
-    'Business manager',
-    'Senior business manager',
-    'Executive business manager'
-]
+categories = ['Employee Referral',
+'Portal',
+'Others',
+'Not Available',
+'Vendor']
 
 # Values for each of the 4 charts
-values1_full = [45, 36, 32, 43, 41, 50, 0, 0, 0, 0]
-values2_full = [174, 189, 162, 183, 427, 0, 0, 0, 0, 0]
-values3_full = [10, 11, 13, 11, 5, 0, 0, 0, 0, 0]
-values4_full = [16.63, 16.67, 12.83, 16.98, 83.26, 0, 0, 0, 0, 0]
-Designation_full = Designation # Rename for clarity
+values1 = [46, 29, 55, 0, 31]
+values2 = [188, 189, 160, 0, 191]
+values3 = [12.19, 14.00, 12.15, 0, 10.48]
+values4 = [15.39, 13.47, 13.15, 0, 18.22]
 
-
-
-
-# Filter out Designation where all values are NA
-non_na_indices = []
-for i in range(len(Designation_full)):
-    # Check if at least one value is not NaN for this category
-    if (not pd.isna(values1_full[i]) or not pd.isna(values2_full[i]) or
-        not pd.isna(values3_full[i]) or not pd.isna(values4_full[i])):
-        non_na_indices.append(i)
-
-# Filter the Designation and values
-Designation = [Designation_full[i] for i in non_na_indices]
-values1 = [values1_full[i] for i in non_na_indices]
-values2 = [values2_full[i] for i in non_na_indices]
-values3 = [values3_full[i] for i in non_na_indices]
-values4 = [values4_full[i] for i in non_na_indices]
 
 # Create figure with 2x2 subplots
 fig, axes = plt.subplots(2, 2, figsize=(16, 12))
@@ -72,7 +47,7 @@ value_sets = [values1, values2, values3, values4]
 # Create each subplot
 for i, (ax, values, title) in enumerate(zip(axes, value_sets, titles)):
     # Create dataframe for this subplot
-    df = pd.DataFrame({'Categories': Designation, 'Values': values})
+    df = pd.DataFrame({'Categories': categories, 'Values': values})
     
     # Create the bar chart with seaborn
     bars = sns.barplot(x='Categories', y='Values', data=df, palette=palette, ax=ax)
@@ -131,13 +106,10 @@ title.set_path_effects([patheffects.withStroke(linewidth=3, foreground='skyblue'
 
 # Add context information
 plt.figtext(0.5, 0.02, 'Data as of May 29, 2025', ha='center', fontsize=10, fontstyle='italic')
-# Rotate x-axis labels for better readability
-for ax in axes:
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, horizontalalignment='right')
-    plt.setp(ax.get_xticklabels(), fontsize=9)  # Smaller font for x labels
-    
+
 # Add finishing touches
 plt.tight_layout(pad=3.0, rect=[0, 0.03, 1, 0.95])  # Adjust layout to make room for titles
+
 
 plt.savefig('Plot2 Performance Indicators KPI Combined.png', dpi=300, bbox_inches='tight')  # Save high-quality image
 plt.show()

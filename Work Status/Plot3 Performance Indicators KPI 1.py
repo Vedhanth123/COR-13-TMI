@@ -11,14 +11,13 @@ sns.set_theme(style="whitegrid")  # Set the seaborn theme
 plt.rcParams['font.family'] = 'sans-serif'  # Use a cleaner font
 
 # Data for the 4 bar charts
-categories = ['<0', '0-6 Months', '6-12 Months', '12-24 Months', '24-36 Months', '36-346 Months']
+categories = ['Active', 'Inactive', 'Subtotal']
 
 # Values for each of the 4 charts
-values1 = [30,	32,	33,	37,	38,	47]
-values2 = [0,	186,	191,	169,	188,	194]
-values3 = [0,	12,	12,	11,	12,	10]
-values4 = [0,	15.97,	16.16,	15.13,	15.73,	19.05]
-
+values1 = [70, 14, 37]
+values2 = [187, 184, 186]
+values3 = [13, 11, 12]
+values4 = [14.52, 17.01, 15.23]
 
 # Create figure with 2x2 subplots
 fig, axes = plt.subplots(2, 2, figsize=(16, 12))
@@ -33,10 +32,10 @@ palette = sns.color_palette("viridis", 3)  # Vibrant color palette with good col
 
 # Create bar charts for each subplot
 titles = [
-    'Average Cumulative Combined KPI - performance Achievement % of Cohort LRM',
-    'CAP on COMBINED KPI of Top 10% performers in CAP 12 COHORT',
-    'CAP on COMBINED KPI of Bottom 10% performers in CAP 12 COHORT',
-    'Performance multiple of the CAP 12 cohort'
+    'Average Cumulative KPI 1- performance Achievement % of Cohort LRM', 
+    'CAP on KPI 1 of Top 10% performers in CAP 12 COHORT', 
+    'CAP on KPI 1 of Bottom 10% performers in CAP 12 COHORT', 
+    'Performance multiple ON KPI 1 of the CAP 12 cohort'
 ]
 value_sets = [values1, values2, values3, values4]
 
@@ -46,26 +45,36 @@ for i, (ax, values, title) in enumerate(zip(axes, value_sets, titles)):
     df = pd.DataFrame({'Categories': categories, 'Values': values})
     
     # Create the bar chart with seaborn
-    sns.barplot(x='Categories', y='Values', data=df, palette=palette, ax=ax)
-      # Add labels and title with improved styling
+    bars = sns.barplot(x='Categories', y='Values', data=df, palette=palette, ax=ax)
+    # Add labels and title with improved styling
     ax.set_xlabel('Categories', fontsize=12, fontweight='bold')
-    # Use different y-axis label for Performance Multiple
-    if i == 3:  # values4 is the fourth dataset (index 3)
-        ax.set_ylabel('Values', fontsize=12, fontweight='bold')
+    # Set appropriate y-axis label based on the chart
+    if i == 3:  # Performance multiple chart (ratio, not percentage)
+        ax.set_ylabel('Ratio', fontsize=12, fontweight='bold')
     else:
         ax.set_ylabel('Values (%)', fontsize=12, fontweight='bold')
     ax.set_title(f'{title}', fontsize=14, fontweight='bold')
-      # Add values on top of bars
+    
+    # Add values inside bars
     for j, v in enumerate(values):
-        # For the last subplot (Performance Multiple), don't show percentage sign
-        if i == 3:  # values4 is the fourth dataset (index 3)
-            ax.text(j, v + 3, f'{v}', ha='center', fontweight='bold')
-        # Make third graph (Bottom 10%) numbers more visible with larger font and background
-        elif i == 2:  # values3 is the third dataset (index 2)
-            text = ax.text(j, v + 3, f'{v}%', ha='center', fontweight='bold', fontsize=14)
-            text.set_bbox(dict(facecolor='white', alpha=0.7, edgecolor='none', pad=0.5))
-        else:
-            ax.text(j, v + 3, f'{v}%', ha='center', fontweight='bold')
+        if v > 0:  # Only add text for bars with values > 0
+            # Calculate middle position of the bar
+            height = v / 2  # Middle of the bar
+            
+            # Display as ratio for the 4th chart (Performance multiple), percentage for others
+            if i == 3:  # Performance multiple chart (ratio, not percentage)
+                text = ax.text(j, height, f'{v}', ha='center', va='center', 
+                               fontweight='bold', color='white')
+            else:
+                text = ax.text(j, height, f'{v}%', ha='center', va='center', 
+                               fontweight='bold', color='white')
+            
+            # Add contrast background for visibility if needed
+            if v < 20:  # For low values, place text above bar instead of inside
+                if i == 3:  # Performance multiple chart
+                    ax.text(j, v + 1, f'{v}', ha='center', fontweight='bold')
+                else:
+                    ax.text(j, v + 1, f'{v}%', ha='center', fontweight='bold')
     
     # Set y-axis limit to make sure the text is visible
     ax.set_ylim(0, max(values) * 1.2)
@@ -87,6 +96,5 @@ plt.figtext(0.5, 0.02, 'Data as of May 29, 2025', ha='center', fontsize=10, font
 
 # Add finishing touches
 plt.tight_layout(pad=3.0, rect=[0, 0.03, 1, 0.95])  # Adjust layout to make room for titles
-
-plt.savefig('Plot2 Performance Indicators KPI 1.png', dpi=300, bbox_inches='tight')  # Save high-quality image
+plt.savefig('Plot3 Performance Indicators KPI 1.png', dpi=300, bbox_inches='tight')  # Save high-quality image
 plt.show()

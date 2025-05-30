@@ -11,13 +11,17 @@ sns.set_theme(style="whitegrid")  # Set the seaborn theme
 plt.rcParams['font.family'] = 'sans-serif'  # Use a cleaner font
 
 # Data for the 4 bar charts
-categories = ['Software Developer', 'Project Manager', 'Business Analyst', 'Quality Assurance', 'Team Lead']
+categories = ['Employee Referral',
+'Portal',
+'Others',
+'Not Available',
+'Vendor']
 
-# Values for each of the 4 charts - sample values, replace with actual data
-values1 = [45, 52, 38, 41, 56]
-values2 = [275, 290, 240, 260, 295]
-values3 = [10, 8, 12, 9, 7]
-values4 = [27.5, 36.25, 20.0, 28.89, 42.14]
+# Values for each of the 4 charts
+values1 = [53, 31, 63, 0, 35]
+values2 = [288, 324, 235, 0, 291]
+values3 = [9, 10, 11, 0, 8]
+values4 = [32.82, 32.69, 21.85, 0, 35.82]
 
 # Create figure with 2x2 subplots
 fig, axes = plt.subplots(2, 2, figsize=(16, 12))
@@ -45,8 +49,7 @@ for i, (ax, values, title) in enumerate(zip(axes, value_sets, titles)):
     df = pd.DataFrame({'Categories': categories, 'Values': values})
     
     # Create the bar chart with seaborn
-    sns.barplot(x='Categories', y='Values', data=df, palette=palette, ax=ax)
-    
+    bars = sns.barplot(x='Categories', y='Values', data=df, palette=palette, ax=ax)
     # Add labels and title with improved styling
     ax.set_xlabel('Categories', fontsize=12, fontweight='bold')
     # Set appropriate y-axis label based on the chart
@@ -56,13 +59,26 @@ for i, (ax, values, title) in enumerate(zip(axes, value_sets, titles)):
         ax.set_ylabel('Values (%)', fontsize=12, fontweight='bold')
     ax.set_title(f'{title}', fontsize=14, fontweight='bold')
     
-    # Add values on top of bars
+    # Add values inside bars
     for j, v in enumerate(values):
-        # Display as ratio for the 4th chart (Performance multiple), percentage for others
-        if i == 3:  # Performance multiple chart (ratio, not percentage)
-            ax.text(j, v + 3, f'{v}', ha='center', fontweight='bold')
-        else:
-            ax.text(j, v + 3, f'{v}%', ha='center', fontweight='bold')
+        if v > 0:  # Only add text for bars with values > 0
+            # Calculate middle position of the bar
+            height = v / 2  # Middle of the bar
+            
+            # Display as ratio for the 4th chart (Performance multiple), percentage for others
+            if i == 3:  # Performance multiple chart (ratio, not percentage)
+                text = ax.text(j, height, f'{v}', ha='center', va='center', 
+                               fontweight='bold', color='white')
+            else:
+                text = ax.text(j, height, f'{v}%', ha='center', va='center', 
+                               fontweight='bold', color='white')
+            
+            # Add contrast background for visibility if needed
+            if v < 20:  # For low values, place text above bar instead of inside
+                if i == 3:  # Performance multiple chart
+                    ax.text(j, v + 1, f'{v}', ha='center', fontweight='bold')
+                else:
+                    ax.text(j, v + 1, f'{v}%', ha='center', fontweight='bold')
     
     # Set y-axis limit to make sure the text is visible
     ax.set_ylim(0, max(values) * 1.2)
@@ -84,5 +100,5 @@ plt.figtext(0.5, 0.02, 'Data as of May 29, 2025', ha='center', fontsize=10, font
 
 # Add finishing touches
 plt.tight_layout(pad=3.0, rect=[0, 0.03, 1, 0.95])  # Adjust layout to make room for titles
-plt.savefig('Plot 3 Performance Indicators KPI Combined.png', dpi=300, bbox_inches='tight')  # Save high-quality image
+plt.savefig('Plot3 Performance Indicators KPI 1.png', dpi=300, bbox_inches='tight')  # Save high-quality image
 plt.show()

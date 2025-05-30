@@ -15,8 +15,8 @@ CONFIG = {
     ],
     "metrics": [
         "Plot1 Head Count",
-        "Plot2 Performance Indicators KPI 1",
-        "Plot3 Performance Indicators KPI Combined", 
+        "Plot2 Performance Indicators KPI Combined",
+        "Plot3 Performance Indicators KPI 1", 
         "Plot4 Revenue Indicators",
         "Plot5 Attrition Indicators"
     ],
