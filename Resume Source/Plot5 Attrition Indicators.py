@@ -55,40 +55,50 @@ for i, (ax, values, title) in enumerate(zip(axes, value_sets, titles)):
     df = pd.DataFrame({'Categories': categories, 'Values': values})
     
     # Create the bar chart with seaborn
-    sns.barplot(x='Categories', y='Values', data=df, palette=palette, ax=ax)    # Add labels and title with improved styling
-    ax.set_xlabel('Status', fontsize=12, fontweight='bold')
+    bars = sns.barplot(x='Categories', y='Values', data=df, palette=palette, ax=ax)
+    # Add labels and title with improved styling
+    ax.set_xlabel('Resume Source', fontsize=12, fontweight='bold')
     
-    # Set appropriate y-axis label based on the chart
-    if i < 3:  # First three charts are scores
-        ax.set_ylabel('Value', fontsize=12, fontweight='bold')
+    if i == 0: # First chart (Count chart)
+        ax.set_ylabel('Count', fontsize=12, fontweight='bold')
+    elif i < 3:  # Next two charts are residency/tenure
+        ax.set_ylabel('Months', fontsize=12, fontweight='bold')
     else:  # Last two charts are percentages
         ax.set_ylabel('Percentage (%)', fontsize=12, fontweight='bold')
-        
-    ax.set_title(f'{title}', fontsize=14, fontweight='bold')
     
-    # Add values on top of bars with appropriate formatting
+    # Set title with appropriate wrapping for long titles
+    ax.set_title(f'{title}', fontsize=12, fontweight='bold', wrap=True)
+    
+    # Add values inside bars
     for j, v in enumerate(values):
-        if pd.isna(v):  # Skip NA values
+        if pd.isna(v) or v == 0:  # Skip NA or zero values
             continue
         
         # Format value text based on chart type
         if i >= 3:  # Percentage charts
-            txt = f'{int(v)}%'  # Format as percentage
-        elif i == 0:  # Tenure chart (show with 1 decimal place)
-            txt = f'{v:.1f}'
-        elif values[j] == 4169:  # For headcount values
+            txt = f'{int(v)}%'
+        elif i == 0 and v >= 1000:  # Large count values
             txt = f'{int(v):,}'  # Format with commas
-        else:  # Score charts
+        elif i == 0:  # Smaller count values
+            txt = f'{int(v)}'
+        else:  # Score/months charts
             txt = f'{v:.2f}'  # Show with 2 decimal places
             
-        # Calculate vertical position for text
-        if pd.notna(v):
-            max_val = max([x for x in values if pd.notna(x)])
-            y_pos = v + (max_val * 0.05)
-            ax.text(j, y_pos, txt, ha='center', fontweight='bold')
+        # Calculate position for text inside bar
+        if pd.notna(v) and v > 0:
+            # Place text in middle of bar
+            height = v / 2
+            
+            # For very short bars, place text above the bar
+            if v < max([x for x in values if x > 0]) * 0.15:
+                ax.text(j, v + (max([x for x in values if x > 0]) * 0.05), txt, ha='center', fontweight='bold')
+            else:
+                # Inside the bar
+                ax.text(j, height, txt, ha='center', va='center', fontweight='bold', color='white')
     
     # Set y-axis limit to make sure the text is visible
-    ax.set_ylim(0, max(values) * 1.2)
+    if any(v > 0 for v in values):
+        ax.set_ylim(0, max([x for x in values if x > 0]) * 1.2)
     
     # Customize the grid
     sns.despine(left=True, ax=ax)  # Remove the left spine for cleaner look
@@ -97,7 +107,7 @@ for i, (ax, values, title) in enumerate(zip(axes, value_sets, titles)):
 from matplotlib import patheffects
 
 # Add stylish common title
-title = fig.suptitle('Attrition & Retention Dashboard', fontsize=24, fontweight='bold', y=0.98, 
+title = fig.suptitle('Attrition Indicators', fontsize=24, fontweight='bold', y=0.98, 
                    color='darkblue', alpha=0.8)
 # Add path effect for more pop
 title.set_path_effects([patheffects.withStroke(linewidth=3, foreground='skyblue')])
@@ -106,6 +116,6 @@ title.set_path_effects([patheffects.withStroke(linewidth=3, foreground='skyblue'
 plt.figtext(0.5, 0.01, 'Data as of May 29, 2025', ha='center', fontsize=10, fontstyle='italic')
 
 # Add finishing touches
-plt.tight_layout(pad=3.0, rect=[0, 0.03, 1, 0.95])  # Adjust layout to make room for titles
+plt.tight_layout(pad=5.0, rect=[0, 0.03, 1, 0.95], h_pad=5.0)  # Increased padding for titles
 plt.savefig('Plot5 Attrition Indicators.png', dpi=300, bbox_inches='tight')  # Save high-quality image
 plt.show()

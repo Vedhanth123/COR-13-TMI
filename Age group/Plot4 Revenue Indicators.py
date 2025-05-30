@@ -74,4 +74,4 @@ plt.figtext(0.5, 0.02, 'Data as of May 29, 2025', ha='center', fontsize=10, font
 # Add finishing touches
 plt.tight_layout(pad=3.0, rect=[0, 0.03, 1, 0.95])  # Adjust layout to make room for titles
 plt.savefig('Plot4 Revenue Indicators.png', dpi=300, bbox_inches='tight')  # Save high-quality image
-plt.show()
+# plt.show()

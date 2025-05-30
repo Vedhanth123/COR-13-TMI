@@ -15,8 +15,8 @@ CONFIG = {
     ],
     "metrics": [
         "Plot1 Head Count",
-        "Plot2 Performance Indicators KPI Combined",
-        "Plot3 Performance Indicators KPI 1", 
+        "Plot2 Performance Indicators KPI Combined",  # Now 2nd button - KPI Combined
+        "Plot3 Performance Indicators KPI 1",         # Now 3rd button - KPI 1
         "Plot4 Revenue Indicators",
         "Plot5 Attrition Indicators"
     ],
@@ -119,14 +119,14 @@ def main():
         VER4-COR-13/
         ├── Age group/
         │   ├── Plot1 Head Count.png
-        │   ├── Plot2 Performance Indicators KPI 1.png
-        │   ├── Plot3 Performance Indicators KPI Combined.png
+        │   ├── Plot2 Performance Indicators KPI Combined.png
+        │   ├── Plot3 Performance Indicators KPI 1.png
         │   ├── Plot4 Revenue Indicators.png
         │   └── Plot5 Attrition Indicators.png
         ├── Designation/
         │   ├── Plot1 Head Count.png
-        │   ├── Plot2 Performance Indicators KPI 1.png
-        │   ├── Plot3 Performance Indicators KPI Combined.png
+        │   ├── Plot2 Performance Indicators KPI Combined.png
+        │   ├── Plot3 Performance Indicators KPI 1.png
         │   ├── Plot4 Revenue Indicators.png
         │   └── Plot5 Attrition Indicators.png
         ├── Gender/
